@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h1>Mathe Lernapp</h1>
+    <h3>3c - Training</h3>
     <h2 id="question">Lade Aufgabe...</h2>
     <div id="buttons"></div>
     <p id="stats" class="hidden"></p>
@@ -64,7 +64,7 @@
             }
             
             const task = questions[currentIndex];
-            document.getElementById('question').innerText = `(${currentIndex + 1}) ${task.a} - ${task.b} = ?`;
+            document.getElementById('question').innerText = `(${currentIndex + 1}.)    ${task.a} - ${task.b} = ?`;
             const answers = generateAnswers(task.result);
             
             let buttonsHTML = '';
