@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mathe Lernapp</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; transition: background-color 0.5s; }
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; transition: background 0.5s; }
         .btn { padding: 10px 20px; margin: 10px; font-size: 18px; cursor: pointer; }
         .hidden { display: none; }
-        .wrong { background-color: red; }
+        .wrong { background: red; }
     </style>
 </head>
 <body>
-    <h3>3c - Training</h3>
+    <h3>Mathe Übung für 3c</h3>
     <h2 id="question">Lade Aufgabe...</h2>
     <div id="buttons"></div>
     <p id="stats" class="hidden"></p>
     <button id="restart" class="btn hidden" onclick="startGame()">Nochmal spielen</button>
+    <h2>Fehlversuche</h2>
+    <ul id="error-log"></ul>
 
     <script>
         const tasks = [
@@ -39,6 +41,7 @@
         let correct = 0;
         let wrong = 0;
         let startTime;
+        let errorLog = [];
 
         function shuffle(array) {
             return array.sort(() => Math.random() - 0.5);
@@ -64,7 +67,7 @@
             }
             
             const task = questions[currentIndex];
-            document.getElementById('question').innerText = `(${currentIndex + 1}.)    ${task.a} - ${task.b} = ?`;
+            document.getElementById('question').innerText = `(${currentIndex + 1}) ${task.a} - ${task.b} = ?`;
             const answers = generateAnswers(task.result);
             
             let buttonsHTML = '';
@@ -84,10 +87,20 @@
                 document.body.classList.add('wrong');
                 setTimeout(() => {
                     document.body.classList.remove('wrong');
-                    currentIndex++;
-                    displayQuestion();
                 }, 2000);
+                errorLog.unshift(`${questions[currentIndex].a} - ${questions[currentIndex].b} = ${questions[currentIndex].result}`);
+                updateErrorLog();
             }
+        }
+
+        function updateErrorLog() {
+            const logElement = document.getElementById('error-log');
+            logElement.innerHTML = '';
+            errorLog.forEach(error => {
+                const li = document.createElement('li');
+                li.textContent = error;
+                logElement.appendChild(li);
+            });
         }
 
         function startGame() {
@@ -97,6 +110,8 @@
             currentIndex = 0;
             correct = 0;
             wrong = 0;
+            errorLog = [];
+            document.getElementById('error-log').innerHTML = '';
             startTime = Date.now();
             document.getElementById('stats').classList.add('hidden');
             document.getElementById('restart').classList.add('hidden');
